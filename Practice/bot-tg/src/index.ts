@@ -29,20 +29,20 @@ bot.on('message', async msg => {
 
 //callback inlineKeyBoard
 bot.on('callback_query', async (query) => {
-
-
     if (query.data === 'balance') {
         await bot.sendMessage(query.from.id, 'Введите сумму пополнения:');
 
-        bot.on('message', async msg => {
-
+        const messageListener = async (msg: any) => {
             if (!Number.parseFloat(msg.text || '')) {
                 await bot.sendMessage(msg.chat.id, 'Ошибка! Введите, пожалуйста, сумму ввиде числа');
 
             } else {
-                await bot.sendMessage(msg.chat.id, `Вы пополнили баланс на ${msg.text}`)
+                await bot.sendMessage(msg.chat.id, `Вы пополнили баланс на ${msg.text}`);
+                // Remove the listener
+                bot.removeListener('message', messageListener);
+            }
+        };
 
-a            }
-        })
+        bot.on('message', messageListener);
     }
-})
+});
